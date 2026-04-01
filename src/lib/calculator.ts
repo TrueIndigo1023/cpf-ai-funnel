@@ -22,8 +22,8 @@ export interface QuizState {
 }
 
 export const defaultQuizState: QuizState = {
-  currentAge: 0,
-  retireAge: 0,
+  currentAge: 50,
+  retireAge: 65,
   desiredMonthly: 1000,
   raBracket: null,
   cpfOA: 100000,
@@ -73,18 +73,25 @@ export function calculateResults(state: QuizState) {
   const combinedAtSixtyFive = combinedAssets * Math.pow(1.06, yearsToGrow);
   const portfolioMonthlyIncome = (combinedAtSixtyFive * 0.06) / 12;
 
-  // Total income = CPF LIFE + portfolio + other income sources
-  const totalMonthlyIncome = cpfLifeMonthly + portfolioMonthlyIncome + otherIncomeMonthly;
+  // Current trajectory = what they get WITHOUT optimisation (CPF LIFE + other income only)
+  const currentTrajectory = cpfLifeMonthly + otherIncomeMonthly;
+
+  // Optimised total = current + portfolio income from deploying idle assets
+  const totalMonthlyIncome = currentTrajectory + portfolioMonthlyIncome;
 
   // Inflation-adjusted spending: what $5K today costs at retirement
   const inflatedDesiredMonthly = desiredMonthly * Math.pow(1 + INFLATION_RATE, yearsToGrow);
 
-  // Gap analysis against inflation-adjusted figure
-  const monthlyShortfall = inflatedDesiredMonthly - totalMonthlyIncome;
-  const isOnTrack = monthlyShortfall <= 0;
+  // On track = CURRENT trajectory (before optimisation) already covers needs
+  const isOnTrack = currentTrajectory >= inflatedDesiredMonthly;
 
-  // Surplus if on track (positive number)
-  const monthlySurplus = isOnTrack ? Math.abs(monthlyShortfall) : 0;
+  // Gaps/surpluses based on CURRENT trajectory (not optimised)
+  const currentGap = Math.max(0, inflatedDesiredMonthly - currentTrajectory);
+  const currentSurplus = isOnTrack ? currentTrajectory - inflatedDesiredMonthly : 0;
+
+  // Gap after optimisation
+  const monthlyShortfall = Math.max(0, inflatedDesiredMonthly - totalMonthlyIncome);
+  const monthlySurplus = totalMonthlyIncome > inflatedDesiredMonthly ? totalMonthlyIncome - inflatedDesiredMonthly : 0;
 
   return {
     birthYear,
@@ -96,9 +103,12 @@ export function calculateResults(state: QuizState) {
     otherIncomeMonthly,
     combinedAssets,
     combinedAtSixtyFive,
+    currentTrajectory,
     totalMonthlyIncome,
     desiredMonthlyToday: desiredMonthly,
     inflatedDesiredMonthly,
+    currentGap,
+    currentSurplus,
     monthlyShortfall,
     monthlySurplus,
     isOnTrack,

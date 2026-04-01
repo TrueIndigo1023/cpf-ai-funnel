@@ -78,26 +78,44 @@ const QuizPage = () => {
 
             <div>
               <label className="block font-medium text-stone-900 mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>Your current age</label>
-              <select
-                value={state.currentAge || ""}
-                onChange={(e) => update("currentAge", Number(e.target.value))}
-                className="w-full border border-stone-300 rounded-xl px-4 py-3 bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-              >
-                <option value="">Select your age</option>
-                {ages.map((a) => (<option key={a} value={a}>{a}</option>))}
-              </select>
+              <div className="relative pt-8 pb-2">
+                <div
+                  className="absolute top-0 bg-emerald-600 text-white text-sm font-semibold rounded-full px-3 py-1 -translate-x-1/2 tabular-nums"
+                  style={{ left: `${((state.currentAge || 50) - 50) / 14 * 100}%` }}
+                >
+                  {state.currentAge || 50}
+                </div>
+                <input
+                  type="range" min={50} max={64} step={1}
+                  value={state.currentAge || 50}
+                  onChange={(e) => update("currentAge", Number(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                />
+                <div className="flex justify-between text-xs text-stone-400 mt-1">
+                  <span>50</span><span>64</span>
+                </div>
+              </div>
             </div>
 
             <div>
               <label className="block font-medium text-stone-900 mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>Planned retirement age</label>
-              <select
-                value={state.retireAge || ""}
-                onChange={(e) => update("retireAge", Number(e.target.value))}
-                className="w-full border border-stone-300 rounded-xl px-4 py-3 bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-              >
-                <option value="">Select retirement age</option>
-                {retireAges.map((a) => (<option key={a} value={a}>{a}</option>))}
-              </select>
+              <div className="relative pt-8 pb-2">
+                <div
+                  className="absolute top-0 bg-emerald-600 text-white text-sm font-semibold rounded-full px-3 py-1 -translate-x-1/2 tabular-nums"
+                  style={{ left: `${((state.retireAge || 55) - 55) / 15 * 100}%` }}
+                >
+                  {state.retireAge || 55}
+                </div>
+                <input
+                  type="range" min={55} max={70} step={1}
+                  value={state.retireAge || 55}
+                  onChange={(e) => update("retireAge", Number(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                />
+                <div className="flex justify-between text-xs text-stone-400 mt-1">
+                  <span>55</span><span>70</span>
+                </div>
+              </div>
               <p className="text-xs text-stone-400 mt-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>CPF LIFE payouts begin at 65</p>
             </div>
 
@@ -206,7 +224,7 @@ const QuizPage = () => {
                   { key: "part_time" as OtherIncomeSource, icon: Briefcase, label: "Part-time work" },
                   { key: "pension" as OtherIncomeSource, icon: Building2, label: "Pension" },
                   { key: "business" as OtherIncomeSource, icon: Building, label: "Business income" },
-                  { key: "none" as OtherIncomeSource, icon: XCircle, label: "None — CPF only" },
+                  { key: "none" as OtherIncomeSource, icon: XCircle, label: "None,CPF only" },
                 ]).map((item) => {
                   const selected = state.otherIncomeSources.includes(item.key);
                   return (
@@ -285,7 +303,7 @@ const QuizPage = () => {
                   { key: "basic" as RetirementGoal, label: "Simple & stress-free", desc: "Cover essentials, no financial worry" },
                   { key: "comfortable" as RetirementGoal, label: "Comfortable lifestyle", desc: "Eat out, enjoy hobbies, occasional treats" },
                   { key: "travel" as RetirementGoal, label: "Travel & experiences", desc: "Regular holidays, bucket list trips" },
-                  { key: "legacy" as RetirementGoal, label: "Leave a legacy", desc: "Support children, grandchildren, give back" },
+                  { key: "legacy" as RetirementGoal, label: "Leave an inheritance", desc: "Support children, grandchildren, give back" },
                 ]).map((item) => (
                   <div key={item.key} onClick={() => update("retirementGoal", item.key)}
                     className={`cursor-pointer rounded-xl border-2 p-4 transition-all ${state.retirementGoal === item.key ? "border-emerald-500 bg-emerald-50" : "border-stone-200 bg-white hover:border-stone-300"}`}>

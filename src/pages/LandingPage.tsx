@@ -62,10 +62,10 @@ const LandingPage = () => {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { icon: ShieldCheck, title: "Your CPF LIFE Payout at 65", desc: "See your projected monthly income based on your Retirement Account — tied to exactly how much you've set aside." },
+              { icon: ShieldCheck, title: "Your CPF LIFE Payout at 65", desc: "See your projected monthly income based on your Retirement Account,tied to exactly how much you've set aside." },
               { icon: TrendingUp, title: "What Your CPF OA Could Generate", desc: "Your Ordinary Account has real income potential. We'll show what it could add monthly." },
               { icon: Wallet, title: "Your Idle Savings' Hidden Power", desc: "Cash in low-yield accounts is retirement income waiting to happen. See what it could generate." },
-              { icon: AlertTriangle, title: "Your Retirement Income Gap", desc: "Are you on track, or is there a shortfall? We'll tell you clearly — and how much your assets can close.", amber: true },
+              { icon: AlertTriangle, title: "Your Retirement Income Gap", desc: "Are you on track, or is there a shortfall? We'll tell you clearly,and how much your assets can close.", amber: true },
             ].map((d) => (
               <div key={d.title} className="card-premium p-6 text-left">
                 <d.icon className={`h-7 w-7 mb-3 ${d.amber ? "text-amber-500" : "text-emerald-600"}`} />
@@ -92,7 +92,7 @@ const LandingPage = () => {
               "Are between 50 and 64 years old",
               "Have CPF but haven't modelled actual monthly income at 65",
               "Have cash sitting in low-yield accounts",
-              "Want an honest picture — not a sales pitch",
+              "Want an honest picture,not a sales pitch",
               "Are within 5–15 years of retirement",
               "Wonder if CPF alone will be enough",
             ].map((item) => (
@@ -114,7 +114,7 @@ const LandingPage = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { name: "Mdm R., 56, Bishan", badge: "Discovered a $1,700/month gap — and a path to close it", quote: "Seeing the actual number made it real — and showed me there were things I could still do." },
+              { name: "Mdm R., 56, Bishan", badge: "Discovered a $1,700/month gap,and a path to close it", quote: "Seeing the actual number made it real,and showed me there were things I could still do." },
               { name: "Mr K., 58, Tampines", badge: "Unlocked income from existing savings", quote: "This showed me my existing savings weren't being put to work. Changed how I think about money." },
               { name: "Mr & Mrs W., 61, Clementi", badge: "Built a shared retirement income plan", quote: "Having the actual figures made it much easier to have the retirement conversation we'd been putting off." },
               { name: "Mr A., 52, Punggol", badge: "Started optimising with 13 years of runway", quote: "At 52 I thought this was future me's problem. The calculator showed me every year I wait is compounding I can't get back." },
@@ -142,7 +142,7 @@ const LandingPage = () => {
             See Where You Stand Before It's Too Late to Act
           </h2>
           <p className="text-stone-400 mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Your personalised retirement income report — free, in under 2 minutes.
+            Your personalised retirement income report,free, in under 2 minutes.
           </p>
           <button onClick={() => navigate("/quiz")} className="btn-cta-white max-w-md mx-auto text-lg">
             Start My Free Report →
