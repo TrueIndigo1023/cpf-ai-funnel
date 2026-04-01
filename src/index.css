@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 97%;
+    --foreground: 20 14% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 10%;
+
+    --primary: 152 56% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 30% 95%;
+    --secondary-foreground: 20 14% 10%;
+
+    --muted: 30 10% 93%;
+    --muted-foreground: 20 8% 50%;
+
+    --accent: 38 92% 55%;
+    --accent-foreground: 20 14% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 56% 38%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 152 56% 38%;
+
+    --radius: 0.75rem;
+
+    --text-secondary: 20 8% 50%;
+
+    --dark: 220 20% 10%;
+    --dark-card: 220 16% 14%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* Naction-style green highlight box */
+  .highlight-box {
+    @apply bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6;
+  }
+
+  /* Dark premium section */
+  .section-dark {
+    background: linear-gradient(180deg, hsl(220 20% 10%) 0%, hsl(220 16% 14%) 100%);
+  }
+
+  /* Warm cream section */
+  .section-warm {
+    background: linear-gradient(180deg, hsl(30 30% 97%) 0%, hsl(30 20% 94%) 100%);
+  }
+
+  /* Premium card */
+  .card-premium {
+    @apply bg-white rounded-2xl shadow-sm border border-stone-200/60 transition-all duration-200;
+  }
+
+  .card-premium:hover {
+    @apply shadow-md;
+  }
+
+  /* Primary CTA button — big, bold, Naction-style */
+  .btn-cta {
+    @apply bg-emerald-600 text-white rounded-2xl px-8 py-6 font-bold text-lg transition-all duration-200 inline-flex items-center justify-center gap-2 w-full text-center;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.25);
+  }
+
+  .btn-cta:hover {
+    @apply bg-emerald-700;
+    box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-cta:active {
+    transform: translateY(0);
+  }
+
+  /* Secondary CTA */
+  .btn-cta-white {
+    @apply bg-white text-stone-900 rounded-2xl px-8 py-6 font-bold text-lg transition-all duration-200 inline-flex items-center justify-center gap-2 w-full text-center;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .btn-cta-white:hover {
+    @apply bg-stone-50;
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+  }
+
+  /* Quiz cards */
+  .quiz-card {
+    @apply border-2 border-stone-200 rounded-2xl bg-white cursor-pointer hover:border-stone-300 transition-all duration-200 hover:shadow-sm p-6;
+  }
+
+  .quiz-card-selected {
+    @apply border-2 border-emerald-500 bg-emerald-50 rounded-2xl cursor-pointer transition-all duration-200 shadow-sm p-6;
+  }
+
+  /* Quiz primary button */
+  .btn-primary-cpf {
+    @apply bg-emerald-600 text-white rounded-xl px-8 py-4 font-semibold hover:bg-emerald-700 transition-all duration-200 inline-flex items-center justify-center gap-2;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Separator line */
+  .divider {
+    @apply border-t border-stone-200 my-12;
+  }
+
+  /* Step number circle */
+  .step-circle {
+    @apply bg-emerald-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Red X bullet */
+  .bullet-x {
+    @apply text-red-500 font-bold text-sm mt-0.5 flex-shrink-0;
+  }
+
+  /* Green check bullet */
+  .bullet-check {
+    @apply h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5;
+  }
+
+  /* Letter-style paragraph */
+  .letter-p {
+    @apply text-stone-700 leading-[1.9] mb-4 text-[15px];
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Section heading */
+  .section-label {
+    @apply text-emerald-600 text-xs font-bold uppercase tracking-[0.2em] mb-2;
+    font-family: 'DM Sans', sans-serif;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: hsl(30 10% 90%);
+  border-radius: 999px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: hsl(152 56% 38%);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: hsl(152 56% 38%);
+  cursor: pointer;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}

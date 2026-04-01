@@ -1,0 +1,12 @@
+// Landing page
+export const HERO_LIFESTYLE_PHOTO = "HERO_PHOTO_URL_HERE";
+export const EXPLAINER_VIDEO_URL = "VIDEO_URL_HERE";
+export const CASE_STUDY_PHOTO_1 = "PHOTO_1_URL_HERE";
+export const CASE_STUDY_PHOTO_2 = "PHOTO_2_URL_HERE";
+export const CASE_STUDY_PHOTO_3 = "PHOTO_3_URL_HERE";
+export const CASE_STUDY_PHOTO_4 = "PHOTO_4_URL_HERE";
+export const DEON_HEADSHOT_LANDING = "DEON_PHOTO_URL_HERE";
+
+// Results page
+export const DEON_HEADSHOT_RESULTS = "DEON_PHOTO_URL_HERE";
+export const CTA_VIDEO_URL = "CTA_VIDEO_URL_HERE";
