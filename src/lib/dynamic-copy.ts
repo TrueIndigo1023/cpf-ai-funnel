@@ -1,18 +1,16 @@
 import { type Concern, type Confidence, type RetirementGoal, fmt } from "./calculator";
 
-// ============================================================
-// DYNAMIC COPY ENGINE
-// Generates hyper-specific copy based on quiz inputs
-// Modeled after Naction 1/3 long-form sales letter structure
-// ============================================================
-
 interface CopyInputs {
   firstName: string;
   currentAge: number;
-  desiredMonthly: number;
+  desiredMonthlyToday: number;
+  inflatedDesiredMonthly: number;
   cpfLifeMonthly: number;
   totalMonthlyIncome: number;
+  portfolioMonthlyIncome: number;
+  otherIncomeMonthly: number;
   monthlyShortfall: number;
+  monthlySurplus: number;
   extraMonthly: number;
   cpfOA: number;
   idleCash: number;
@@ -21,12 +19,25 @@ interface CopyInputs {
   concern: Concern;
   confidence: Confidence;
   retirementGoal: RetirementGoal;
+  isOnTrack: boolean;
   totalRetirementLoss: number;
   annualInflationLoss: number;
 }
 
-// ---- HERO HEADLINES (per concern) ----
+// ============================================================
+// HERO HEADLINES — 2 modes × 4 concerns = 8 versions
+// ============================================================
+
 export function getHeroHeadline(c: CopyInputs): string {
+  if (c.isOnTrack) {
+    const map: Record<Concern, string> = {
+      healthcare: `Great News, ${c.firstName} — You're on Track for ${fmt(c.totalMonthlyIncome)}/Month at 65. Now Let's Make Sure Rising Healthcare Costs Can't Touch It.`,
+      outliving: `Great News, ${c.firstName} — You're on Track for ${fmt(c.totalMonthlyIncome)}/Month at 65. Now Let's Make Sure It Lasts to 95 and Beyond.`,
+      inflation: `Great News, ${c.firstName} — You're on Track for ${fmt(c.totalMonthlyIncome)}/Month at 65. But Inflation Will Quietly Erode ${fmt(c.annualInflationLoss)}/Year Unless You Act.`,
+      family: `Great News, ${c.firstName} — You're on Track for ${fmt(c.totalMonthlyIncome)}/Month at 65. Now Let's Turn That Into a Legacy Your Family Benefits From.`,
+    };
+    return map[c.concern];
+  }
   const map: Record<Concern, string> = {
     healthcare: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income So Rising Healthcare Costs Never Force You to Choose Between Your Health and Your Savings`,
     outliving: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income That Lasts As Long As You Do — Even If You Live to 95`,
@@ -36,7 +47,10 @@ export function getHeroHeadline(c: CopyInputs): string {
   return map[c.concern];
 }
 
-// ---- QUALIFYING PRE-HEADLINE (per concern) ----
+// ============================================================
+// PRE-HEADLINES
+// ============================================================
+
 export function getPreHeadline(c: CopyInputs): string {
   const map: Record<Concern, string> = {
     healthcare: `For Singaporeans Aged ${c.currentAge} Worried About Medical Bills Eating Into Their Retirement`,
@@ -47,25 +61,84 @@ export function getPreHeadline(c: CopyInputs): string {
   return map[c.concern];
 }
 
-// ---- OPENING "DEAR READER" LETTER (per concern + confidence) ----
-export function getOpeningLetter(c: CopyInputs): string {
-  const concernOpening: Record<Concern, string> = {
-    healthcare: `You told us your biggest worry is rising healthcare costs — and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, your CPF is on track to pay you just ${fmt(c.cpfLifeMonthly)}/month at 65. You said you need ${fmt(c.desiredMonthly)}/month. That leaves you with ${fmt(c.monthlyShortfall)}/month LESS than what you need — and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans don't realise...`,
-    outliving: `You told us your biggest fear is outliving your savings — and the math backs up that fear. The average Singaporean lives to 84. Many live past 90. That's 20-30 years of retirement your money needs to survive.\n\nRight now, your CPF is on track to pay you just ${fmt(c.cpfLifeMonthly)}/month at 65. You said you need ${fmt(c.desiredMonthly)}/month. At that rate, the gap between what you have and what you need could cost you ${fmt(c.totalRetirementLoss)} over 20 years.\n\nThat number isn't meant to scare you. It's meant to show you why acting NOW — while you still have ${c.yearsLeft} years of compounding ahead — changes everything.`,
-    inflation: `You told us inflation is your biggest concern — and you're watching it happen in real time. Your kopi went from $1.20 to $1.80. Your hawker meals cost 30% more than 5 years ago. And it's not stopping.\n\nYour ${fmt(c.idleTotal)} sitting in bank accounts earning 0.05% is LOSING approximately ${fmt(c.annualInflationLoss)} every single year to inflation. That's not an opinion — it's basic math. In 10 years, your ${fmt(c.idleTotal)} will buy what ${fmt(Math.round(c.idleTotal * Math.pow(0.97, 10)))} buys today.\n\nMeanwhile, your CPF alone will pay just ${fmt(c.cpfLifeMonthly)}/month at 65. You need ${fmt(c.desiredMonthly)}/month. The gap is real and it's growing.`,
-    family: `You told us your priority is supporting your family without becoming a burden — and that tells us everything about who you are. You've spent your whole life taking care of others. The last thing you want is for your children to worry about taking care of you.\n\nBut right now, your CPF is on track to pay just ${fmt(c.cpfLifeMonthly)}/month at 65. You said you need ${fmt(c.desiredMonthly)}/month. That ${fmt(c.monthlyShortfall)}/month gap means one of two things: either you cut back on the life you want, or your children fill the gap.\n\nThere's a third option. And it starts with the ${fmt(c.idleTotal)} already sitting in your accounts.`,
-  };
+// ============================================================
+// INFLATION REALITY (always shown)
+// ============================================================
 
-  const confidenceBridge: Record<Confidence, string> = {
+export function getInflationReality(c: CopyInputs): string {
+  if (c.yearsLeft === 0) return '';
+  const at75 = Math.round(c.inflatedDesiredMonthly * Math.pow(1.025, 10));
+  const at85 = Math.round(c.inflatedDesiredMonthly * Math.pow(1.025, 20));
+  return `You said you want ${fmt(c.desiredMonthlyToday)}/month in retirement. But with inflation at 2.5%/year, that same lifestyle will cost ${fmt(c.inflatedDesiredMonthly)}/month by the time you're 65 — that's ${c.yearsLeft} years from now. By 75, it'll cost ${fmt(at75)}/month. By 85, ${fmt(at85)}/month.\n\nEvery dollar figure on this page uses the inflation-adjusted number. Because planning for today's prices is planning to fall short.`;
+}
+
+// ============================================================
+// OPENING LETTER — ON TRACK versions (4 concerns)
+// ============================================================
+
+function getOnTrackOpening(c: CopyInputs): string {
+  const map: Record<Concern, string> = {
+    healthcare: `Good news, ${c.firstName} — based on your numbers, you're on track for ${fmt(c.totalMonthlyIncome)}/month at 65. That's ${fmt(c.monthlySurplus)}/month MORE than your inflation-adjusted spending of ${fmt(c.inflatedDesiredMonthly)}/month. You've clearly been doing something right.\n\nBut here's what even well-prepared Singaporeans miss: healthcare costs in Singapore are rising at 10% per year — four times faster than general inflation. A single hospital stay costs $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life has significant gaps.\n\nYour surplus of ${fmt(c.monthlySurplus)}/month is good. But is it enough to absorb a major medical event without derailing your entire retirement? That's exactly what we help you stress-test.`,
+
+    outliving: `Good news, ${c.firstName} — your projected income of ${fmt(c.totalMonthlyIncome)}/month at 65 covers your inflation-adjusted spending of ${fmt(c.inflatedDesiredMonthly)}/month with ${fmt(c.monthlySurplus)} to spare. Well done.\n\nBut here's the question most people forget to ask: will this still work at 80? At 85? At 92? The average Singaporean lives to 84, but many live well past 90. Over 25+ years, even a small miscalculation in inflation, healthcare costs, or investment returns can compound into a serious shortfall.\n\nYou're in a strong position now. The session makes sure you stay there — for as long as you live.`,
+
+    inflation: `Good news, ${c.firstName} — you're on track for ${fmt(c.totalMonthlyIncome)}/month at 65, which covers your inflation-adjusted need of ${fmt(c.inflatedDesiredMonthly)}/month.\n\nBut let's talk about what "on track" actually means over 20-30 years of retirement. At 2.5% inflation, your ${fmt(c.inflatedDesiredMonthly)}/month lifestyle will cost ${fmt(Math.round(c.inflatedDesiredMonthly * Math.pow(1.025, 10)))}/month by age 75. And ${fmt(Math.round(c.inflatedDesiredMonthly * Math.pow(1.025, 20)))}/month by age 85.\n\nThe question isn't whether you're on track today. It's whether your income GROWS with inflation or gets eaten by it. That's what we optimise in the session.`,
+
+    family: `Good news, ${c.firstName} — at ${fmt(c.totalMonthlyIncome)}/month at 65, you're well-positioned to retire without becoming a financial burden on your children. Your income exceeds your inflation-adjusted need by ${fmt(c.monthlySurplus)}/month.\n\nBut supporting family isn't just about covering your own expenses. It's about having margin — the ability to help with a grandchild's education, contribute to family gatherings, or handle unexpected situations without stress.\n\nYour surplus is healthy. The session helps you structure it into lasting family value — not just retirement survival.`,
+  };
+  return map[c.concern];
+}
+
+// ============================================================
+// OPENING LETTER — NOT ON TRACK versions (4 concerns)
+// ============================================================
+
+function getNotOnTrackOpening(c: CopyInputs): string {
+  const map: Record<Concern, string> = {
+    healthcare: `You told us your biggest worry is rising healthcare costs — and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, your total projected income is ${fmt(c.totalMonthlyIncome)}/month at 65. But after adjusting for inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That leaves a gap of ${fmt(c.monthlyShortfall)}/month — and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans don't realise...`,
+
+    outliving: `You told us your biggest fear is outliving your savings — and the math backs up that fear. The average Singaporean lives to 84. Many live past 90. That's 20-30 years of retirement your money needs to survive.\n\nYour total projected income is ${fmt(c.totalMonthlyIncome)}/month at 65. But inflation-adjusted, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That gap of ${fmt(c.monthlyShortfall)}/month could cost you ${fmt(c.totalRetirementLoss)} over 20 years.\n\nThat number isn't meant to scare you. It's meant to show you why acting NOW — while you still have ${c.yearsLeft} years of compounding ahead — changes everything.`,
+
+    inflation: `You told us inflation is your biggest concern — and you're watching it happen in real time. Your kopi went from $1.20 to $1.80. Your hawker meals cost 30% more than 5 years ago. And it's not stopping.\n\nYour ${fmt(c.idleTotal)} sitting in bank accounts earning 0.05% is LOSING approximately ${fmt(c.annualInflationLoss)} every single year to inflation. In 10 years, your ${fmt(c.idleTotal)} will buy what ${fmt(Math.round(c.idleTotal * Math.pow(0.975, 10)))} buys today.\n\nMeanwhile, your total income at 65 is ${fmt(c.totalMonthlyIncome)}/month — but you'll need ${fmt(c.inflatedDesiredMonthly)}/month after inflation. The gap is real and it's growing.`,
+
+    family: `You told us your priority is supporting your family without becoming a burden — and that tells us everything about who you are. You've spent your whole life taking care of others. The last thing you want is for your children to worry about taking care of you.\n\nBut your total projected income at 65 is ${fmt(c.totalMonthlyIncome)}/month. After inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That ${fmt(c.monthlyShortfall)}/month gap means one of two things: either you cut back on the life you want, or your children fill the gap.\n\nThere's a third option. And it starts with the ${fmt(c.idleTotal)} already sitting in your accounts.`,
+  };
+  return map[c.concern];
+}
+
+// ============================================================
+// CONFIDENCE BRIDGE (appended to opening)
+// ============================================================
+
+function getConfidenceBridge(c: CopyInputs): string {
+  const map: Record<Confidence, string> = {
     not_confident: `\n\nWe understand you're not confident in your retirement plan right now. That's actually a GOOD thing — because it means you're not fooling yourself. Most people who say they're "fine" haven't run the numbers. You have. And you're here because you want to fix it.`,
     somewhat: `\n\nYou mentioned you're somewhat confident but not sure if it's enough. Here's the truth: "somewhat confident" usually means "I hope it works out." Hope isn't a plan. Numbers are. And your numbers tell a very clear story.`,
     confident: `\n\nYou said you're fairly confident in your plan. That's good — you've clearly been thinking about this. But even confident planners often discover they're leaving ${fmt(c.extraMonthly)}/month on the table. The question isn't whether you'll survive retirement. It's whether you'll THRIVE in it.`,
   };
-
-  return concernOpening[c.concern] + confidenceBridge[c.confidence];
+  return map[c.confidence];
 }
 
-// ---- "EVEN IF" OBJECTION DEMOLITION (per concern) ----
+export function getOpeningLetter(c: CopyInputs): string {
+  const base = c.isOnTrack ? getOnTrackOpening(c) : getNotOnTrackOpening(c);
+  return base + getConfidenceBridge(c);
+}
+
+// ============================================================
+// REVEAL BOX — different for on track vs not
+// ============================================================
+
+export function getRevealText(c: CopyInputs): string {
+  if (c.isOnTrack) {
+    return `Your combined income of ${fmt(c.totalMonthlyIncome)}/month exceeds your inflation-adjusted need of ${fmt(c.inflatedDesiredMonthly)}/month. That's a healthy ${fmt(c.monthlySurplus)}/month buffer.\n\nThe question now is: will this hold up for 20-30 years? Will your income grow with inflation? Is there a healthcare buffer? Could you turn that surplus into a legacy? That's what we optimise in the session.`;
+  }
+  return `Your ${fmt(c.idleTotal)} in CPF OA and savings — combined with a properly optimised CPF LIFE strategy — could generate up to ${fmt(c.totalMonthlyIncome)}/month at 65.\n\nThat's ${fmt(c.extraMonthly)}/month MORE than CPF alone. That's an extra ${fmt(c.extraMonthly * 12)}/year. Over 20 years of retirement, that's ${fmt(c.extraMonthly * 240)} in additional income — money that's already yours, just not working for you yet.`;
+}
+
+// ============================================================
+// "EVEN IF" BULLETS
+// ============================================================
+
 export function getEvenIfBullets(c: CopyInputs): string[] {
   const base = [
     "You've never spoken to a retirement planner before",
@@ -73,8 +146,7 @@ export function getEvenIfBullets(c: CopyInputs): string[] {
     "You're not sure how CPF LIFE actually works",
     "You've been putting this off for years",
   ];
-
-  const concernSpecific: Record<Concern, string[]> = {
+  const specific: Record<Concern, string[]> = {
     healthcare: [
       "You already have MediShield Life and think you're covered",
       "You have existing health conditions that worry you",
@@ -96,13 +168,15 @@ export function getEvenIfBullets(c: CopyInputs): string[] {
       "You have ongoing financial obligations that feel permanent",
     ],
   };
-
-  return [...base, ...concernSpecific[c.concern]];
+  return [...base, ...specific[c.concern]];
 }
 
-// ---- FUTURE PACING (per retirementGoal) ----
+// ============================================================
+// FUTURE PACING (by retirementGoal)
+// ============================================================
+
 export function getFuturePacing(c: CopyInputs): string[] {
-  const goalPacing: Record<RetirementGoal, string[]> = {
+  const map: Record<RetirementGoal, string[]> = {
     basic: [
       `It's the 1st of the month. ${fmt(c.totalMonthlyIncome)} appears in your account — not from work, but from a plan you set in motion at age ${c.currentAge}.`,
       "You wake up without an alarm. There's no rush. You make breakfast, read the papers, take a walk to the market.",
@@ -118,7 +192,7 @@ export function getFuturePacing(c: CopyInputs): string[] {
     travel: [
       `It's the 1st of the month. ${fmt(c.totalMonthlyIncome)} appears in your account — not from work, but from a plan you set in motion at age ${c.currentAge}.`,
       "You're scrolling through flight prices to Tokyo. Not dreaming — booking. Because this year's budget already accounts for two trips.",
-      "Your friends marvel at your photos. They ask how you afford it. The answer: you spent 45 minutes at age " + c.currentAge + " getting your numbers right.",
+      `Your friends marvel at your photos. They ask how you afford it. The answer: you spent 45 minutes at age ${c.currentAge} getting your numbers right.`,
       `The world didn't get smaller when you retired. It got bigger. Because ${fmt(c.totalMonthlyIncome)}/month buys freedom.`,
     ],
     legacy: [
@@ -128,53 +202,41 @@ export function getFuturePacing(c: CopyInputs): string[] {
       `This is legacy. And it starts with making your ${fmt(c.idleTotal)} work as hard as you did.`,
     ],
   };
-
-  return goalPacing[c.retirementGoal];
+  return map[c.retirementGoal];
 }
 
-// ---- CONCERN-SPECIFIC TESTIMONIALS ----
-export function getTestimonials(c: CopyInputs) {
-  // Return testimonials weighted toward their concern
-  const all = [
-    {
-      name: "David Tan", age: 52, concern: "inflation" as Concern,
-      situation: "Had $220K in CPF OA + $150K in fixed deposits earning 0.5%",
-      before: "$1,400/mo", after: "$3,800/mo",
-      quote: "I didn't realise inflation was quietly eating $9,000/year from my savings. After the session, I restructured everything. My projected retirement income more than doubled — and it's inflation-protected.",
-    },
-    {
-      name: "Nurul Huda", age: 48, concern: "family" as Concern,
-      situation: "Had $160K CPF OA + $80K savings, supporting elderly mother",
-      before: "$1,100/mo", after: "$2,900/mo",
-      quote: "I was terrified of burdening my children the way I've been supporting my mother. The session showed me exactly how to close the gap. My kids won't need to worry about me — and I didn't need to sell anything or take risks.",
-    },
-    {
-      name: "Ravi Krishnan", age: 53, concern: "outliving" as Concern,
-      situation: "Had $200K CPF OA + $180K across bank accounts",
-      before: "$1,600/mo", after: "$4,100/mo",
-      quote: "My father lived to 91. I was terrified I'd run out of money at 80. The retirement plan they built for me generates income for life — not just 10 or 15 years. I sleep better now.",
-    },
-    {
-      name: "Linda Cheong", age: 56, concern: "healthcare" as Concern,
-      situation: "Had $140K CPF OA + $200K in savings, worried about medical bills",
-      before: "$1,200/mo", after: "$3,400/mo",
-      quote: "After my husband's hospital stay cost $32,000, I panicked about our retirement. The session showed me our savings could generate almost triple what CPF alone would give. Best 45 minutes I ever spent.",
-    },
-  ];
+// ============================================================
+// TESTIMONIALS (concern-matched ordering)
+// ============================================================
 
-  // Put matching-concern testimonials first
+export function getTestimonials(c: CopyInputs) {
+  const all = [
+    { name: "David Tan", age: 52, concern: "inflation" as Concern, situation: "Had $220K in CPF OA + $150K in fixed deposits earning 0.5%", before: "$1,400/mo", after: "$3,800/mo", quote: "I didn't realise inflation was quietly eating $9,000/year from my savings. After the session, I restructured everything. My projected retirement income more than doubled — and it's inflation-protected." },
+    { name: "Nurul Huda", age: 48, concern: "family" as Concern, situation: "Had $160K CPF OA + $80K savings, supporting elderly mother", before: "$1,100/mo", after: "$2,900/mo", quote: "I was terrified of burdening my children the way I've been supporting my mother. The session showed me exactly how to close the gap. My kids won't need to worry about me." },
+    { name: "Ravi Krishnan", age: 53, concern: "outliving" as Concern, situation: "Had $200K CPF OA + $180K across bank accounts", before: "$1,600/mo", after: "$4,100/mo", quote: "My father lived to 91. I was terrified I'd run out of money at 80. The retirement plan they built for me generates income for life — not just 10 or 15 years. I sleep better now." },
+    { name: "Linda Cheong", age: 56, concern: "healthcare" as Concern, situation: "Had $140K CPF OA + $200K in savings, worried about medical bills", before: "$1,200/mo", after: "$3,400/mo", quote: "After my husband's hospital stay cost $32,000, I panicked about our retirement. The session showed me our savings could generate almost triple what CPF alone would give. Best 45 minutes I ever spent." },
+  ];
   const matching = all.filter(t => t.concern === c.concern);
   const others = all.filter(t => t.concern !== c.concern);
   return [...matching, ...others].slice(0, 4);
 }
 
-// ---- SESSION VALUE (per concern) ----
+// ============================================================
+// SESSION AGENDA (base + concern-specific + on-track extras)
+// ============================================================
+
 export function getSessionAgenda(c: CopyInputs): string[] {
   const base = [
     `Calculate your exact CPF LIFE payout at 65 (currently projected at ${fmt(c.cpfLifeMonthly)}/mo)`,
     `Show you how to deploy your ${fmt(c.idleTotal)} in CPF OA + savings for maximum income`,
     `Build a written plan to generate up to ${fmt(c.totalMonthlyIncome)}/month in retirement`,
   ];
+
+  const onTrackExtras = c.isOnTrack ? [
+    "Stress-test your plan against 30 years of inflation at 2.5%",
+    "Check if your other income sources are inflation-protected",
+    "Optimise CPF structure for maximum payout efficiency",
+  ] : [];
 
   const concernSpecific: Record<Concern, string[]> = {
     healthcare: [
@@ -195,5 +257,20 @@ export function getSessionAgenda(c: CopyInputs): string[] {
     ],
   };
 
-  return [...base, ...concernSpecific[c.concern]];
+  return [...base, ...onTrackExtras, ...concernSpecific[c.concern]];
+}
+
+// ============================================================
+// CTA TEXT (different for on-track vs not)
+// ============================================================
+
+export function getCTAText(c: CopyInputs, position: 1 | 2 | 3): string {
+  if (c.isOnTrack) {
+    if (position === 1) return "Lock In My Retirement Advantage — Book Free Session";
+    if (position === 2) return "Optimise My Plan — Book My Free Session";
+    return "Claim My Free CPF Maximiser Session";
+  }
+  if (position === 1) return `Show Me How to Get ${fmt(c.totalMonthlyIncome)}/Month at 65`;
+  if (position === 2) return "I Want These Results — Book My Free Session";
+  return "Claim My Free CPF Maximiser Session";
 }

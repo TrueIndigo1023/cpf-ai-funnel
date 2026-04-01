@@ -2,6 +2,8 @@ export type Concern = 'healthcare' | 'outliving' | 'inflation' | 'family';
 export type Confidence = 'not_confident' | 'somewhat' | 'confident';
 export type RetirementGoal = 'comfortable' | 'travel' | 'basic' | 'legacy';
 
+export type OtherIncomeSource = 'rental' | 'investments' | 'part_time' | 'pension' | 'business' | 'none';
+
 export interface QuizState {
   currentAge: number;
   retireAge: number;
@@ -9,6 +11,8 @@ export interface QuizState {
   raBracket: 'BRS' | 'FRS' | 'ERS' | null;
   cpfOA: number;
   idleCash: number;
+  otherIncomeSources: OtherIncomeSource[];
+  otherIncomeMonthly: number;
   concern: Concern | null;
   confidence: Confidence | null;
   retirementGoal: RetirementGoal | null;
@@ -24,6 +28,8 @@ export const defaultQuizState: QuizState = {
   raBracket: null,
   cpfOA: 100000,
   idleCash: 50000,
+  otherIncomeSources: [],
+  otherIncomeMonthly: 0,
   concern: null,
   confidence: null,
   retirementGoal: null,
@@ -34,8 +40,10 @@ export const defaultQuizState: QuizState = {
 
 export const fmt = (n: number) => `$${Math.abs(Math.round(n)).toLocaleString('en-SG')}`;
 
+export const INFLATION_RATE = 0.025; // 2.5% inflation for spending adjustment
+
 export function calculateResults(state: QuizState) {
-  const { currentAge, raBracket, cpfOA, idleCash, desiredMonthly } = state;
+  const { currentAge, raBracket, cpfOA, idleCash, desiredMonthly, otherIncomeMonthly } = state;
 
   const FRS_2026 = 220400;
   const FRS_GROWTH_RATE = 0.0350821;
@@ -65,13 +73,18 @@ export function calculateResults(state: QuizState) {
   const combinedAtSixtyFive = combinedAssets * Math.pow(1.06, yearsToGrow);
   const portfolioMonthlyIncome = (combinedAtSixtyFive * 0.06) / 12;
 
-  const totalMonthlyIncome = cpfLifeMonthly + portfolioMonthlyIncome;
+  // Total income = CPF LIFE + portfolio + other income sources
+  const totalMonthlyIncome = cpfLifeMonthly + portfolioMonthlyIncome + otherIncomeMonthly;
 
-  const yearsToInflate = Math.max(0, 65 - currentAge);
-  const inflatedIncome = desiredMonthly * Math.pow(1.03, yearsToInflate);
+  // Inflation-adjusted spending: what $5K today costs at retirement
+  const inflatedDesiredMonthly = desiredMonthly * Math.pow(1 + INFLATION_RATE, yearsToGrow);
 
-  const monthlyShortfall = inflatedIncome - totalMonthlyIncome;
+  // Gap analysis against inflation-adjusted figure
+  const monthlyShortfall = inflatedDesiredMonthly - totalMonthlyIncome;
   const isOnTrack = monthlyShortfall <= 0;
+
+  // Surplus if on track (positive number)
+  const monthlySurplus = isOnTrack ? Math.abs(monthlyShortfall) : 0;
 
   return {
     birthYear,
@@ -80,11 +93,14 @@ export function calculateResults(state: QuizState) {
     cpfLifeMonthly,
     drawdownRate,
     portfolioMonthlyIncome,
+    otherIncomeMonthly,
     combinedAssets,
     combinedAtSixtyFive,
     totalMonthlyIncome,
-    inflatedIncome,
+    desiredMonthlyToday: desiredMonthly,
+    inflatedDesiredMonthly,
     monthlyShortfall,
+    monthlySurplus,
     isOnTrack,
     ersMultiplier,
     yearsToGrow,
