@@ -40,11 +40,15 @@ export function getHeroHeadline(c: CopyInputs): string {
     };
     return map[c.concern];
   }
+  // If after optimisation they're still short by >30%, lead with the uplift amount instead
+  const bigShortfall = c.monthlyShortfall > c.inflatedDesiredMonthly * 0.3;
+  const leadNum = bigShortfall ? `Add ${fmt(c.portfolioMonthlyIncome)}/Month to Your Retirement Income` : `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income`;
+
   const map: Record<Concern, string> = {
-    healthcare: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income So Rising Healthcare Costs Never Force You to Choose Between Your Health and Your Savings`,
-    outliving: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income That Lasts As Long As You Do — Even If You Live to 95`,
-    inflation: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income That GROWS With Inflation Instead of Being Eaten By It`,
-    family: `Generate ${fmt(c.totalMonthlyIncome)}/Month in Retirement Income So You Can Support Your Family WITHOUT Becoming a Financial Burden`,
+    healthcare: `${leadNum} So Rising Healthcare Costs Never Force You to Choose Between Your Health and Your Savings`,
+    outliving: `${leadNum} That Lasts As Long As You Do — Even If You Live to 95`,
+    inflation: `${leadNum} That GROWS With Inflation Instead of Being Eaten By It`,
+    family: `${leadNum} So You Can Support Your Family WITHOUT Becoming a Financial Burden`,
   };
   return map[c.concern];
 }
@@ -99,14 +103,18 @@ function getOnTrackOpening(c: CopyInputs): string {
 
 function getNotOnTrackOpening(c: CopyInputs): string {
   const currentGapOver20 = Math.round(c.currentGap * 12 * 20);
+  const savingsDesc = c.cpfOA > 0
+    ? `${fmt(c.cpfOA)} in CPF OA earning 2.5% and ${fmt(c.idleCash)} in savings earning close to nothing`
+    : `${fmt(c.idleCash)} in savings earning close to nothing`;
+
   const map: Record<Concern, string> = {
-    healthcare: `You told us your biggest worry is rising healthcare costs, and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, without any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But after adjusting for inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That's a gap of ${fmt(c.currentGap)}/month, and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans don't realise...`,
+    healthcare: `You told us your biggest worry is rising healthcare costs — and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, without any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But after adjusting for inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That's a gap of ${fmt(c.currentGap)}/month — and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans in your position don't realise: your ${savingsDesc} — if restructured properly — can dramatically change these numbers.`,
 
-    outliving: `You told us your biggest fear is outliving your savings, and the math backs up that fear. The average Singaporean lives to 84. Many live past 90. That's 20-30 years of retirement your money needs to survive.\n\nWithout any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But inflation-adjusted, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That gap of ${fmt(c.currentGap)}/month could cost you ${fmt(currentGapOver20)} over 20 years.\n\nThat number isn't meant to scare you. It's meant to show you why acting NOW, while you still have ${c.yearsLeft} years of compounding ahead, changes everything.`,
+    outliving: `You told us your biggest fear is outliving your savings — and the math backs up that fear. The average Singaporean lives to 84. Many live past 90. That's 20-30 years of retirement your money needs to survive.\n\nWithout any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But inflation-adjusted, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That gap of ${fmt(c.currentGap)}/month could cost you ${fmt(currentGapOver20)} over 20 years.\n\nThat number isn't meant to scare you. It's meant to show you why acting NOW — while you still have ${c.yearsLeft} ${c.yearsLeft === 1 ? 'year' : 'years'} of compounding ahead — changes everything.`,
 
-    inflation: `You told us inflation is your biggest concern, and you're watching it happen in real time. Your kopi went from $1.20 to $1.80. Your hawker meals cost 30% more than 5 years ago. And it's not stopping.\n\nYour ${fmt(c.idleTotal)} sitting in bank accounts earning 0.05% is LOSING approximately ${fmt(c.annualInflationLoss)} every single year to inflation. In 10 years, your ${fmt(c.idleTotal)} will buy what ${fmt(Math.round(c.idleTotal * Math.pow(0.975, 10)))} buys today.\n\nWithout changes, your income at 65 is ${fmt(c.currentTrajectory)}/month, but you'll need ${fmt(c.inflatedDesiredMonthly)}/month after inflation. The gap is ${fmt(c.currentGap)}/month, and it's growing.`,
+    inflation: `You told us inflation is your biggest concern — and you're watching it happen in real time. Your kopi went from $1.20 to $1.80. Your hawker meals cost 30% more than 5 years ago. And it's not stopping.\n\nYou have ${savingsDesc} — and both are losing ground to inflation. That's approximately ${fmt(c.annualInflationLoss)} in lost purchasing power every single year. In 10 years, your ${fmt(c.idleTotal)} will buy what ${fmt(Math.round(c.idleTotal * Math.pow(0.975, 10)))} buys today.\n\nWithout changes, your income at 65 is ${fmt(c.currentTrajectory)}/month, but you'll need ${fmt(c.inflatedDesiredMonthly)}/month after inflation. The gap is ${fmt(c.currentGap)}/month — and it's growing.`,
 
-    family: `You told us your priority is supporting your family without becoming a burden, and that tells us everything about who you are. You've spent your whole life taking care of others. The last thing you want is for your children to worry about taking care of you.\n\nBut without changes, your income at 65 is ${fmt(c.currentTrajectory)}/month. After inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That ${fmt(c.currentGap)}/month gap means one of two things: either you cut back on the life you want, or your children fill the gap.\n\nThere's a third option. And it starts with the ${fmt(c.idleTotal)} already sitting in your accounts.`,
+    family: `You told us your priority is supporting your family without becoming a burden — and that tells us everything about who you are. You've spent your whole life taking care of others. The last thing you want is for your children to worry about taking care of you.\n\nBut without changes, your income at 65 is ${fmt(c.currentTrajectory)}/month. After inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That ${fmt(c.currentGap)}/month gap means one of two things: either you cut back on the life you want, or your children fill the gap.\n\nThere's a third option — and it starts with the ${fmt(c.idleTotal)} already sitting in your accounts.`,
   };
   return map[c.concern];
 }
@@ -170,9 +178,9 @@ export function getEvenIfBullets(c: CopyInputs): string[] {
   const base = [
     "You've never spoken to a retirement planner before",
     c.idleTotal < 300000
-      ? `You think ${fmt(c.idleTotal)} isn't enough to make a meaningful difference`
-      : "You're not sure if your savings are really working as hard as they could",
-    "You're not sure how CPF LIFE actually works",
+      ? `You think ${fmt(c.idleTotal)} isn't enough to make a real difference`
+      : "You're not sure your savings are working as hard as they could",
+    "You don't fully understand how CPF LIFE payouts work",
     "You've been putting this off for years",
   ];
   const specific: Record<Concern, string[]> = {
@@ -205,6 +213,18 @@ export function getEvenIfBullets(c: CopyInputs): string[] {
 // ============================================================
 
 export function getFuturePacing(c: CopyInputs): string[] {
+  // If still a large shortfall (>30% of need), use honest but aspirational pacing
+  const bigShortfall = c.monthlyShortfall > c.inflatedDesiredMonthly * 0.3;
+
+  if (bigShortfall) {
+    return [
+      `It's the 1st of the month. ${fmt(c.totalMonthlyIncome)} arrives in your account automatically — ${fmt(c.portfolioMonthlyIncome)} more than you'd have without the plan you set in motion at age ${c.currentAge}.`,
+      `That extra ${fmt(c.portfolioMonthlyIncome)}/month is the difference between scrambling and breathing. It doesn't close the gap entirely — but it buys you time, options, and room to work on the rest.`,
+      "And the session doesn't just show you this number. It shows you the 3-4 additional levers most Singaporeans don't know about — CPF timing strategies, withdrawal sequencing, top-up optimisation — that could close the remaining gap over the next few years.",
+      `The worst thing you can do is nothing. Because your ${fmt(c.idleTotal)} earning close to nothing is a choice — and it's costing you ${fmt(c.portfolioMonthlyIncome)}/month in retirement income you could have had.`,
+    ];
+  }
+
   const map: Record<RetirementGoal, string[]> = {
     basic: [
       `It's the 1st of the month. ${fmt(c.totalMonthlyIncome)} appears in your account — not from work, but from a plan you set in motion at age ${c.currentAge}.`,
@@ -305,12 +325,18 @@ export function getSessionAgenda(c: CopyInputs): string[] {
 // ============================================================
 
 export function getCTAText(c: CopyInputs, position: 1 | 2 | 3): string {
+  const bigShortfall = c.monthlyShortfall > c.inflatedDesiredMonthly * 0.3;
+
   if (c.isOnTrack) {
-    if (position === 1) return "Lock In My Retirement Advantage,Book Free Session";
-    if (position === 2) return "Optimise My Plan,Book My Free Session";
+    if (position === 1) return "Lock In My Retirement Advantage — Book Free Session";
+    if (position === 2) return "Optimise My Plan — Book My Free Session";
     return "Claim My Free CPF Maximiser Session";
   }
-  if (position === 1) return `Show Me How to Get ${fmt(c.totalMonthlyIncome)}/Month at 65`;
-  if (position === 2) return "I Want These Results,Book My Free Session";
+  if (position === 1) {
+    return bigShortfall
+      ? `Show Me How to Add ${fmt(c.portfolioMonthlyIncome)}/Month to My Retirement`
+      : `Show Me How to Get ${fmt(c.totalMonthlyIncome)}/Month at 65`;
+  }
+  if (position === 2) return "I Want These Results — Book My Free Session";
   return "Claim My Free CPF Maximiser Session";
 }
