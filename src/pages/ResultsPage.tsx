@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { ShieldCheck, CheckCircle, Star, Clock, Users, ArrowRight, AlertTriangle, Info, TrendingUp, Newspaper, Award, BarChart2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,6 +14,7 @@ import testimonial1 from "@/assets/testimonial-1.jpg";
 import testimonial2 from "@/assets/testimonial-2.jpg";
 import testimonial3 from "@/assets/testimonial-3.jpg";
 import testimonial4 from "@/assets/testimonial-4.jpg";
+import { trackEvent, setupScrollTracking } from "@/lib/tracking";
 
 const testimonialImages = [testimonial1, testimonial2, testimonial3, testimonial4];
 
@@ -67,8 +69,23 @@ const ResultsPage = () => {
   const sessionAgenda = getSessionAgenda(copyInputs);
   const f = { fontFamily: "'DM Sans', sans-serif" };
 
+  useEffect(() => {
+    trackEvent('ResultsPageView', '/results', {
+      isOnTrack: r.isOnTrack,
+      concern: quizState.concern,
+      confidence: quizState.confidence,
+      goal: quizState.retirementGoal,
+      currentTrajectory: r.currentTrajectory,
+      totalMonthlyIncome: r.totalMonthlyIncome,
+      inflatedDesired: r.inflatedDesiredMonthly,
+    });
+    const cleanup = setupScrollTracking();
+    return cleanup;
+  }, []);
+
   const BookingCTA = ({ position }: { position: 1 | 2 | 3 }) => (
     <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer"
+      onClick={() => trackEvent(`CTAClick${position}`, '/results', { position, isOnTrack: r.isOnTrack, concern: quizState.concern })}
       className={position === 3 ? "btn-cta-white" : "btn-cta"}>
       <span className="block">{getCTAText(copyInputs, position)}</span>
       {position === 1 && <span className="block text-sm font-normal mt-1.5 opacity-80">Free 45-Minute Session · Written Plan · No Products Sold</span>}
@@ -169,6 +186,9 @@ const ResultsPage = () => {
             </div>
           </section>
         )}
+
+        {/* Scroll sentinel: 25% */}
+        <div data-scroll-depth="25" aria-hidden="true" />
 
         {/* CTA #1 */}
         <BookingCTA position={1} />
@@ -305,6 +325,9 @@ const ResultsPage = () => {
           </div>
         </section>
 
+        {/* Scroll sentinel: 50% */}
+        <div data-scroll-depth="50" aria-hidden="true" />
+
         {/* CTA #2 */}
         <BookingCTA position={2} />
 
@@ -327,6 +350,9 @@ const ResultsPage = () => {
             </div>
           </div>
         </section>
+
+        {/* Scroll sentinel: 75% */}
+        <div data-scroll-depth="75" aria-hidden="true" />
 
         {/* ================================================================
             FUTURE PACING — Dynamic by retirement goal
@@ -426,6 +452,9 @@ const ResultsPage = () => {
             </p>
           </div>
         </section>
+
+        {/* Scroll sentinel: 100% */}
+        <div data-scroll-depth="100" aria-hidden="true" />
 
         {/* Disclaimer */}
         <p className="text-xs text-stone-400 leading-relaxed" style={f}>This report is for educational and illustrative purposes only. All figures are estimates based on simplified assumptions. "What's Possible" projections assume a balanced portfolio targeting 6% annual returns — actual results depend on your investment strategy, which will be discussed in your session. CPF LIFE payouts depend on individual circumstances, plan chosen, and CPF Board policies. This does not constitute financial advice. Consult a licensed financial advisor before making decisions.</p>

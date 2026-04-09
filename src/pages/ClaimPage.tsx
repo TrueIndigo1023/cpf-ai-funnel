@@ -1,9 +1,10 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type QuizState, calculateResults } from "@/lib/calculator";
 import { Loader2 } from "lucide-react";
+import { trackEvent } from "@/lib/tracking";
 
 declare global {
   interface Window {
@@ -21,6 +22,10 @@ const ClaimPage = () => {
   const [mobile, setMobile] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [whatsappConsent, setWhatsappConsent] = useState(false);
+
+  useEffect(() => {
+    trackEvent('ClaimPageView', '/claim');
+  }, []);
 
   if (!quizState || !quizState.currentAge) {
     navigate("/quiz", { replace: true });

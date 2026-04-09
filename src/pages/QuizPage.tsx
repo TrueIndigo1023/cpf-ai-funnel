@@ -4,6 +4,7 @@ import { Heart, Clock, TrendingDown, Users, Home, BarChart2, Briefcase, Building
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { type QuizState, type Concern, type Confidence, type RetirementGoal, type OtherIncomeSource, defaultQuizState, fmt, INFLATION_RATE } from "@/lib/calculator";
+import { trackEvent } from "@/lib/tracking";
 
 const QuizPage = () => {
   const navigate = useNavigate();
@@ -38,10 +39,13 @@ const QuizPage = () => {
     : 0;
 
   const handleFinalContinue = () => {
+    trackEvent('QuizStep3Complete', '/quiz', { concern: state.concern, confidence: state.confidence, goal: state.retirementGoal });
     const combined = state.cpfOA + state.idleCash;
     if (combined < 100000 && state.otherIncomeMonthly === 0) {
+      trackEvent('NotEligible', '/quiz', { combined });
       navigate("/not-eligible", { state });
     } else {
+      trackEvent('QuizComplete', '/quiz', { combined, concern: state.concern });
       navigate("/loading", { state });
     }
   };
@@ -152,7 +156,7 @@ const QuizPage = () => {
               )}
             </div>
 
-            <button onClick={() => setStep(2)} disabled={!step1Valid} className="btn-primary-cpf w-full disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={() => { trackEvent('QuizStep1Complete', '/quiz', { age: state.currentAge, retireAge: state.retireAge, desiredMonthly: state.desiredMonthly }); setStep(2); }} disabled={!step1Valid} className="btn-primary-cpf w-full disabled:opacity-50 disabled:cursor-not-allowed">
               Continue →
             </button>
           </div>
@@ -260,7 +264,7 @@ const QuizPage = () => {
               </div>
             )}
 
-            <button onClick={() => setStep(3)} disabled={!step2Valid} className="btn-primary-cpf w-full disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={() => { trackEvent('QuizStep2Complete', '/quiz', { raBracket: state.raBracket, cpfOA: state.cpfOA, idleCash: state.idleCash, otherIncome: state.otherIncomeMonthly }); setStep(3); }} disabled={!step2Valid} className="btn-primary-cpf w-full disabled:opacity-50 disabled:cursor-not-allowed">
               Continue →
             </button>
           </div>

@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { CheckCircle, AlertTriangle, TrendingUp, ShieldCheck, Wallet } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { trackEvent } from "@/lib/tracking";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    trackEvent('FunnelView', '/');
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -25,7 +31,7 @@ const LandingPage = () => {
              style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Most Singaporeans leave $1,000-$3,000/month on the table because they've never seen their full picture. This 2-minute assessment changes that.
           </p>
-          <button onClick={() => navigate("/quiz")} className="btn-cta max-w-md mx-auto text-xl">
+          <button onClick={() => { trackEvent('QuizStart', '/'); navigate("/quiz"); }} className="btn-cta max-w-md mx-auto text-xl">
             Get My Free Retirement Report →
           </button>
           <p className="text-stone-500 text-xs mt-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -74,7 +80,7 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          <button onClick={() => navigate("/quiz")} className="btn-cta max-w-md mx-auto mt-10 text-lg">
+          <button onClick={() => { trackEvent('QuizStart', '/'); navigate("/quiz"); }} className="btn-cta max-w-md mx-auto mt-10 text-lg">
             Get My Free Retirement Report →
           </button>
         </div>
@@ -129,7 +135,7 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
-          <button onClick={() => navigate("/quiz")} className="btn-cta max-w-md mx-auto mt-10 text-lg">
+          <button onClick={() => { trackEvent('QuizStart', '/'); navigate("/quiz"); }} className="btn-cta max-w-md mx-auto mt-10 text-lg">
             Get My Free Retirement Report →
           </button>
         </div>
@@ -144,7 +150,7 @@ const LandingPage = () => {
           <p className="text-stone-400 mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Your personalised retirement income report,free, in under 2 minutes.
           </p>
-          <button onClick={() => navigate("/quiz")} className="btn-cta-white max-w-md mx-auto text-lg">
+          <button onClick={() => { trackEvent('QuizStart', '/'); navigate("/quiz"); }} className="btn-cta-white max-w-md mx-auto text-lg">
             Start My Free Report →
           </button>
           <div className="flex flex-wrap justify-center gap-3 mt-6">
