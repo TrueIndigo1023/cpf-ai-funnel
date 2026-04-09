@@ -108,7 +108,7 @@ function getNotOnTrackOpening(c: CopyInputs): string {
     : `${fmt(c.idleCash)} in savings earning close to nothing`;
 
   const map: Record<Concern, string> = {
-    healthcare: `You told us your biggest worry is rising healthcare costs — and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, without any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But after adjusting for inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That's a gap of ${fmt(c.currentGap)}/month — and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans in your position don't realise: your ${savingsDesc} — if restructured properly — can dramatically change these numbers.`,
+    healthcare: `You told us your biggest worry is rising healthcare costs — and you're right to worry. A single hospital stay in Singapore can cost $15,000-$50,000. A chronic condition can drain $2,000-$5,000/month. And MediShield Life doesn't cover everything.\n\nRight now, without any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But after adjusting for inflation, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That's a gap of ${fmt(c.currentGap)}/month — and that's BEFORE a single medical bill hits.\n\nBut here's what most Singaporeans in your position don't realise: your ${savingsDesc} could be adding ${fmt(c.portfolioMonthlyIncome)}/month to your retirement income. That won't cover everything — but it's the difference between ${fmt(c.currentTrajectory)}/month and ${fmt(c.totalMonthlyIncome)}/month. And in the session, we show you exactly how to get there.`,
 
     outliving: `You told us your biggest fear is outliving your savings — and the math backs up that fear. The average Singaporean lives to 84. Many live past 90. That's 20-30 years of retirement your money needs to survive.\n\nWithout any changes, you're on track for ${fmt(c.currentTrajectory)}/month at 65. But inflation-adjusted, you'll need ${fmt(c.inflatedDesiredMonthly)}/month. That gap of ${fmt(c.currentGap)}/month could cost you ${fmt(currentGapOver20)} over 20 years.\n\nThat number isn't meant to scare you. It's meant to show you why acting NOW — while you still have ${c.yearsLeft} ${c.yearsLeft === 1 ? 'year' : 'years'} of compounding ahead — changes everything.`,
 
@@ -153,7 +153,9 @@ export function getRevealText(c: CopyInputs): string {
   if (c.isOnTrack) {
     const surplus = Math.round(c.currentTrajectory - c.inflatedDesiredMonthly);
     const idleLabel = c.cpfOA > 0 ? `${fmt(c.idleTotal)} in CPF OA and savings` : `${fmt(c.idleTotal)} in savings`;
-    return `Your current income of ${fmt(c.currentTrajectory)}/month covers your inflation-adjusted need of ${fmt(c.inflatedDesiredMonthly)}/month with ${fmt(surplus)} to spare.\n\nBut you also have ${idleLabel} that's not doing anything for you right now. Deployed properly, that could add another ${fmt(c.portfolioMonthlyIncome)}/month — bringing your total to ${fmt(c.totalMonthlyIncome)}/month. That's the difference between surviving retirement and thriving in it.`;
+    const annualIdleCost = Math.round(c.idleTotal * 0.025);
+    const tenYearIdleCost = Math.round(c.idleTotal - c.idleTotal * Math.pow(0.975, 10));
+    return `Your current income of ${fmt(c.currentTrajectory)}/month covers your inflation-adjusted need of ${fmt(c.inflatedDesiredMonthly)}/month with ${fmt(surplus)} to spare.\n\nBut you also have ${idleLabel} that's not doing anything for you right now. Every year you wait, that money loses ${fmt(annualIdleCost)} in purchasing power to inflation. Over 10 years, that's ${fmt(tenYearIdleCost)} gone — silently.\n\nDeployed properly, that same money could add ${fmt(c.portfolioMonthlyIncome)}/month to your income. That's ${fmt(Math.round(c.portfolioMonthlyIncome * 12))}/year your family could benefit from — starting now, not when it's too late.`;
   }
 
   const idleLabel = c.cpfOA > 0 ? `${fmt(c.idleTotal)} in CPF OA and savings` : `${fmt(c.idleTotal)} in savings`;
@@ -220,8 +222,8 @@ export function getFuturePacing(c: CopyInputs): string[] {
     return [
       `It's the 1st of the month. ${fmt(c.totalMonthlyIncome)} arrives in your account automatically — ${fmt(c.portfolioMonthlyIncome)} more than you'd have without the plan you set in motion at age ${c.currentAge}.`,
       `That extra ${fmt(c.portfolioMonthlyIncome)}/month is the difference between scrambling and breathing. It doesn't close the gap entirely — but it buys you time, options, and room to work on the rest.`,
-      "And the session doesn't just show you this number. It shows you the 3-4 additional levers most Singaporeans don't know about — CPF timing strategies, withdrawal sequencing, top-up optimisation — that could close the remaining gap over the next few years.",
-      `The worst thing you can do is nothing. Because your ${fmt(c.idleTotal)} earning close to nothing is a choice — and it's costing you ${fmt(c.portfolioMonthlyIncome)}/month in retirement income you could have had.`,
+      "And the session doesn't just show you this number. It shows you specific levers most Singaporeans don't know about — like voluntary CPF top-ups that boost your LIFE payout, BRS-to-FRS transfers that can increase monthly income by 30-50%, and withdrawal sequencing that stretches every dollar further. These aren't generic tips. They're calculated from YOUR numbers.",
+      `45 minutes. That's all it takes to see your full picture and start making your ${fmt(c.idleTotal)} work for you. The people who took this session didn't just get numbers — they got clarity, a plan, and the confidence to act. That's worth more than another year of wondering.`,
     ];
   }
 
@@ -328,7 +330,7 @@ export function getCTAText(c: CopyInputs, position: 1 | 2 | 3): string {
   const bigShortfall = c.monthlyShortfall > c.inflatedDesiredMonthly * 0.3;
 
   if (c.isOnTrack) {
-    if (position === 1) return "Lock In My Retirement Advantage — Book Free Session";
+    if (position === 1) return `Unlock ${fmt(c.portfolioMonthlyIncome)}/Month From My Idle Savings — Free Session`;
     if (position === 2) return "Optimise My Plan — Book My Free Session";
     return "Claim My Free CPF Maximiser Session";
   }
