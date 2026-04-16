@@ -88,7 +88,7 @@ const ResultsPage = () => {
       onClick={() => trackEvent(`CTAClick${position}`, '/results', { position, isOnTrack: r.isOnTrack, concern: quizState.concern })}
       className={position === 3 ? "btn-cta-white" : "btn-cta"}>
       <span className="block">{getCTAText(copyInputs, position)}</span>
-      {position === 1 && <span className="block text-sm font-normal mt-1.5 opacity-80">Free 45-Minute Session · Written Plan · No Products Sold</span>}
+      {position === 1 && <span className="block text-base font-normal mt-1.5 opacity-80">Free 45-Minute Session · Written Plan · No Products Sold</span>}
     </a>
   );
 
@@ -104,7 +104,7 @@ const ResultsPage = () => {
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-amber-400 text-xs font-bold uppercase tracking-[0.2em] mb-5" style={f}>{preHeadline}</p>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.2] mb-6">{heroHeadline}</h1>
-          <p className="text-stone-500 text-sm" style={f}>Through our CPF Retirement Maximiser™ — a proven restructure of your existing CPF + savings</p>
+          <p className="text-stone-500 text-base" style={f}>Through our CPF Retirement Maximiser™ — a proven restructure of your existing CPF + savings</p>
         </div>
       </div>
 
@@ -117,17 +117,17 @@ const ResultsPage = () => {
           <div className="grid grid-cols-3 gap-3">
             <div className="card-premium p-5 text-center">
               <p className="text-3xl sm:text-4xl font-bold text-stone-900 tabular-nums">{fmt(r.inflatedDesiredMonthly)}</p>
-              <p className="text-sm text-stone-500 font-medium mt-1" style={f}>What You'll Need</p>
+              <p className="text-base text-stone-500 font-medium mt-1" style={f}>What You'll Need</p>
               <p className="text-xs text-stone-400 mt-0.5" style={f}>at 65, after inflation</p>
             </div>
             <div className="card-premium p-5 text-center border-red-200">
               <p className="text-2xl sm:text-3xl font-bold text-red-600 tabular-nums">{fmt(r.cpfLifeMonthly + r.otherIncomeMonthly)}</p>
-              <p className="text-sm text-red-500 font-medium mt-1" style={f}>Current Trajectory</p>
+              <p className="text-base text-red-500 font-medium mt-1" style={f}>Current Trajectory</p>
               <p className="text-xs text-stone-400 mt-0.5" style={f}>without optimisation</p>
             </div>
             <div className="card-premium p-5 text-center border-emerald-300 bg-emerald-50/50">
               <p className="text-2xl sm:text-3xl font-bold text-emerald-600 tabular-nums"><CountUpValue value={r.totalMonthlyIncome} /></p>
-              <p className="text-sm text-emerald-600 font-medium mt-1" style={f}>What's Possible</p>
+              <p className="text-base text-emerald-600 font-medium mt-1" style={f}>What's Possible</p>
               <p className="text-xs text-emerald-500 mt-0.5" style={f}>with your idle {fmt(idleTotal)} working</p>
             </div>
           </div>
@@ -142,7 +142,7 @@ const ResultsPage = () => {
             Opening letter — concern-specific, confidence-matched
             ================================================================ */}
         <section>
-          <p className="text-stone-400 text-sm font-medium mb-4" style={f}>Dear {firstName},</p>
+          <p className="text-stone-400 text-base font-medium mb-4" style={f}>Dear {firstName},</p>
           {openingLetter.split("\n\n").map((para, i) => <p key={i} className="letter-p">{para}</p>)}
         </section>
 
@@ -151,9 +151,9 @@ const ResultsPage = () => {
           <section className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
             <div className="flex items-start gap-3 mb-3">
               <Info className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <p className="text-amber-900 font-bold text-sm" style={f}>The Inflation Reality</p>
+              <p className="text-amber-900 font-extrabold text-lg" style={f}>The Inflation Reality</p>
             </div>
-            {inflationReality.split("\n\n").map((para, i) => <p key={i} className="text-amber-800 text-sm leading-relaxed mb-2" style={f}>{para}</p>)}
+            {inflationReality.split("\n\n").map((para, i) => <p key={i} className="text-amber-800 text-lg leading-relaxed mb-3" style={f}>{para}</p>)}
           </section>
         )}
 
@@ -169,7 +169,7 @@ const ResultsPage = () => {
             {evenIfBullets.map((bullet, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className="bullet-x">✗</span>
-                <p className="text-stone-700 text-base leading-relaxed" style={f}>{bullet}</p>
+                <p className="text-stone-700 text-lg leading-relaxed" style={f}>{bullet}</p>
               </div>
             ))}
           </div>
@@ -180,7 +180,7 @@ const ResultsPage = () => {
           <section className="bg-amber-50 border border-amber-200 rounded-xl p-5">
             <div className="flex items-start gap-3">
               <Clock className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <p className="text-amber-800 text-sm leading-relaxed" style={f}>
+              <p className="text-amber-800 text-base leading-relaxed" style={f}>
                 <span className="font-bold">You have {yearsLeft} {yearsLeft === 1 ? 'year' : 'years'} of compounding left.</span> Every year you wait, your {fmt(idleTotal)} misses out on approximately {fmt(Math.round(idleTotal * 0.06))} in potential growth.
               </p>
             </div>
@@ -216,7 +216,7 @@ const ResultsPage = () => {
                   <item.icon className="h-6 w-6 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-2xl font-bold text-stone-900 mb-1">{item.stat}</p>
-                    <p className="text-sm text-stone-600 leading-relaxed mb-2" style={f}>{item.label}</p>
+                    <p className="text-base text-stone-600 leading-relaxed mb-2" style={f}>{item.label}</p>
                     <p className="text-[10px] text-stone-400 italic" style={f}>Source: {item.source}</p>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ const ResultsPage = () => {
           {/* News callout */}
           <div className="card-premium p-5 border-l-4 border-l-amber-400">
             <p className="text-xs text-amber-600 font-bold uppercase tracking-wider mb-2" style={f}>In The News</p>
-            <p className="text-stone-700 text-sm leading-relaxed mb-2" style={f}>
+            <p className="text-stone-700 text-lg leading-relaxed mb-2" style={f}>
               "More than half of Singaporeans approaching retirement are worried they don't have enough. The median household has significant assets in CPF and property — but many don't know how to convert these into monthly retirement income."
             </p>
             <p className="text-[10px] text-stone-400 italic" style={f}>— Adapted from Straits Times / Business Times retirement coverage, 2023-2024</p>
@@ -241,11 +241,11 @@ const ResultsPage = () => {
         <section>
           <p className="section-label text-center">The Method</p>
           <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-3 text-center">The CPF Retirement Maximiser™</h2>
-          <p className="text-stone-500 text-sm mb-6 text-center max-w-lg mx-auto" style={f}>A 3-step restructure for Singaporeans aged 50-64 who want their money working harder</p>
+          <p className="text-stone-500 text-base mb-6 text-center max-w-lg mx-auto" style={f}>A 3-step restructure for Singaporeans aged 50-64 who want their money working harder</p>
 
           {/* Why different callout */}
           <div className="card-premium p-4 border-l-4 border-l-emerald-500 mb-6">
-            <p className="text-stone-700 text-sm leading-relaxed" style={f}>
+            <p className="text-stone-700 text-lg leading-relaxed" style={f}>
               <span className="font-bold">Why this is different:</span> We don't sell financial products. We ONLY do retirement income optimisation for Singaporeans 50-64. We've run these numbers for 200+ people this year. Your situation isn't unique to us — we've seen it before and we know exactly what works.
             </p>
           </div>
@@ -269,7 +269,7 @@ const ResultsPage = () => {
                 </div>
                 <div className="p-6">
                   <p className="letter-p mb-3">{item.copy}</p>
-                  <p className="text-sm text-emerald-700 font-semibold bg-emerald-50 rounded-lg px-4 py-3" style={f}>→ {item.result}</p>
+                  <p className="text-base text-emerald-700 font-bold font-semibold bg-emerald-50 rounded-lg px-4 py-3" style={f}>→ {item.result}</p>
                 </div>
               </div>
             ))}
@@ -285,7 +285,7 @@ const ResultsPage = () => {
           <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 mb-2 text-center">
             {r.isOnTrack ? "Already Comfortable — Then They Optimised Further" : "They Were In Your Exact Situation"}
           </h2>
-          <p className="text-stone-500 text-sm mb-6 text-center" style={f}>
+          <p className="text-stone-500 text-base mb-6 text-center" style={f}>
             Join 200+ Singaporeans who've optimised their retirement income this year
           </p>
 
@@ -295,7 +295,7 @@ const ResultsPage = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <img src={testimonialImages[idx]} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
                   <div>
-                    <p className="font-bold text-stone-900 text-sm" style={f}>{t.name}, {t.age}</p>
+                    <p className="font-bold text-stone-900 text-base" style={f}>{t.name}, {t.age}</p>
                     <div className="flex gap-0.5">{[...Array(5)].map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}</div>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ const ResultsPage = () => {
                   <ArrowRight className="h-4 w-4 text-stone-400 flex-shrink-0" />
                   <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">{t.after}</span>
                 </div>
-                <p className="text-sm text-stone-600 leading-relaxed italic" style={f}>"{t.quote}"</p>
+                <p className="text-base text-stone-600 leading-relaxed italic" style={f}>"{t.quote}"</p>
               </div>
             ))}
           </div>
@@ -339,7 +339,7 @@ const ResultsPage = () => {
             <ShieldCheck className="h-8 w-8 text-emerald-600 flex-shrink-0" />
             <div>
               <h3 className="font-bold text-stone-900 text-lg mb-2" style={f}>Our Promise to You</h3>
-              <p className="text-stone-600 text-sm leading-relaxed mb-3" style={f}>
+              <p className="text-stone-600 text-base leading-relaxed mb-3" style={f}>
                 If you don't walk away from your session with a clear, personalised retirement plan — with your exact numbers, specific action steps, and a path to increasing your monthly income — we'll tell you within the first 10 minutes and give you your time back. No products sold during the session. The report is yours to keep regardless.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -381,7 +381,7 @@ const ResultsPage = () => {
               : "If You're NOT Serious About Fixing This... You Can Stop Reading Here."
             }
           </p>
-          <p className="text-stone-600 text-sm leading-relaxed max-w-lg mx-auto" style={f}>
+          <p className="text-stone-600 text-base leading-relaxed max-w-lg mx-auto" style={f}>
             {r.isOnTrack
               ? {
                   healthcare: `Your retirement income covers your lifestyle. But one hospitalisation, one chronic condition, and that comfortable surplus disappears overnight. The question isn't whether you can retire. It's whether your plan survives a $30,000 medical bill.`,
@@ -400,21 +400,21 @@ const ResultsPage = () => {
             ================================================================ */}
         <section className="section-dark rounded-2xl overflow-hidden">
           <div className="bg-red-600 text-white text-center py-2.5 px-4">
-            <p className="text-xs sm:text-sm font-bold flex items-center justify-center gap-2" style={f}><Users className="h-4 w-4" />Maximum 15 consultations per month — limited slots for {new Date().toLocaleDateString("en-SG", { month: "long" })}</p>
+            <p className="text-xs sm:text-base font-bold flex items-center justify-center gap-2" style={f}><Users className="h-4 w-4" />Maximum 15 consultations per month — limited slots for {new Date().toLocaleDateString("en-SG", { month: "long" })}</p>
           </div>
           <div className="p-6 sm:p-10 space-y-6">
             <div className="text-center">
               <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-2">Here's Everything You'll Walk Away With</h2>
-              <p className="text-stone-400 text-sm" style={f}>In one 45-minute session — completely free</p>
+              <p className="text-stone-400 text-base" style={f}>In one 45-minute session — completely free</p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-5">
               <ul className="space-y-3">
                 {sessionAgenda.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm"><CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" /><span className="text-stone-200" style={f}>{item}</span></li>
+                  <li key={i} className="flex items-start gap-3 text-base"><CheckCircle className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" /><span className="text-stone-200" style={f}>{item}</span></li>
                 ))}
               </ul>
               <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-stone-400 text-sm">Total Value:</span><span className="text-stone-400 text-sm line-through">$1,150</span>
+                <span className="text-stone-400 text-base">Total Value:</span><span className="text-stone-400 text-base line-through">$1,150</span>
               </div>
               <div className="flex items-center justify-between mt-1">
                 <span className="text-white font-bold text-lg" style={f}>Your Investment Today:</span><span className="text-emerald-400 font-black text-2xl">FREE</span>
@@ -423,7 +423,7 @@ const ResultsPage = () => {
 
             {/* Explicit step-by-step instructions */}
             <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-              <p className="text-white font-bold text-sm mb-3" style={f}>Here's exactly what to do next:</p>
+              <p className="text-white font-bold text-base mb-3" style={f}>Here's exactly what to do next:</p>
               <div className="space-y-2">
                 {[
                   "Click the button below to see available time slots",
@@ -433,7 +433,7 @@ const ResultsPage = () => {
                 ].map((step, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <span className="bg-emerald-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    <p className="text-stone-300 text-sm" style={f}>{step}</p>
+                    <p className="text-stone-300 text-base" style={f}>{step}</p>
                   </div>
                 ))}
               </div>

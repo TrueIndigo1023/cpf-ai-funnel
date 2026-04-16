@@ -44,6 +44,7 @@
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     font-size: 18px;
     line-height: 1.75;
+    font-weight: 500;
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -106,16 +107,19 @@
   /* ============================================================
      NACTION GREEN HIGHLIGHT BOX
      Used for key reveals, important claims
-     Generous padding, stands out from the page
+     Font size SAME as body — no shrinking
      ============================================================ */
   .highlight-box {
     @apply bg-emerald-50 border-2 border-emerald-200 rounded-2xl;
     padding: 32px;
+    font-size: 18px;
+    line-height: 1.8;
   }
 
   @media (min-width: 640px) {
     .highlight-box {
       padding: 40px;
+      font-size: 20px;
     }
   }
 
@@ -241,13 +245,14 @@
   .letter-p {
     @apply text-stone-700 mb-5;
     font-family: 'DM Sans', sans-serif;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.85;
+    font-weight: 500;
   }
 
   @media (min-width: 640px) {
     .letter-p {
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1.9;
     }
   }
