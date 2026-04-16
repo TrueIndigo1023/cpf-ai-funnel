@@ -11,6 +11,7 @@ import LoadingPage from "./pages/LoadingPage";
 import ClaimPage from "./pages/ClaimPage";
 import ResultsPage from "./pages/ResultsPage";
 import NotFound from "./pages/NotFound";
+import PreviewResults from "./pages/PreviewResults";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/loading" element={<LoadingPage />} />
           <Route path="/claim" element={<ClaimPage />} />
           <Route path="/results" element={<ResultsPage />} />
+          <Route path="/preview" element={<PreviewResults />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

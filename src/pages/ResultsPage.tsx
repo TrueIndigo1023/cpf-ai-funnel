@@ -103,7 +103,7 @@ const ResultsPage = () => {
       <div className="section-dark py-12 sm:py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-amber-400 text-xs font-bold uppercase tracking-[0.2em] mb-5" style={f}>{preHeadline}</p>
-          <h1 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-bold text-white leading-[1.2] mb-6">{heroHeadline}</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.2] mb-6">{heroHeadline}</h1>
           <p className="text-stone-500 text-sm" style={f}>Through our CPF Retirement Maximiser™ — a proven restructure of your existing CPF + savings</p>
         </div>
       </div>
@@ -116,26 +116,26 @@ const ResultsPage = () => {
         <div className="max-w-2xl mx-auto">
           <div className="grid grid-cols-3 gap-3">
             <div className="card-premium p-5 text-center">
-              <p className="text-2xl sm:text-3xl font-bold text-stone-900 tabular-nums">{fmt(r.inflatedDesiredMonthly)}</p>
-              <p className="text-[10px] sm:text-xs text-stone-500 font-medium mt-1" style={f}>What You'll Need</p>
-              <p className="text-[9px] text-stone-400 mt-0.5" style={f}>at 65, after inflation</p>
+              <p className="text-3xl sm:text-4xl font-bold text-stone-900 tabular-nums">{fmt(r.inflatedDesiredMonthly)}</p>
+              <p className="text-sm text-stone-500 font-medium mt-1" style={f}>What You'll Need</p>
+              <p className="text-xs text-stone-400 mt-0.5" style={f}>at 65, after inflation</p>
             </div>
             <div className="card-premium p-5 text-center border-red-200">
               <p className="text-2xl sm:text-3xl font-bold text-red-600 tabular-nums">{fmt(r.cpfLifeMonthly + r.otherIncomeMonthly)}</p>
-              <p className="text-[10px] sm:text-xs text-red-500 font-medium mt-1" style={f}>Current Trajectory</p>
-              <p className="text-[9px] text-stone-400 mt-0.5" style={f}>without optimisation</p>
+              <p className="text-sm text-red-500 font-medium mt-1" style={f}>Current Trajectory</p>
+              <p className="text-xs text-stone-400 mt-0.5" style={f}>without optimisation</p>
             </div>
             <div className="card-premium p-5 text-center border-emerald-300 bg-emerald-50/50">
               <p className="text-2xl sm:text-3xl font-bold text-emerald-600 tabular-nums"><CountUpValue value={r.totalMonthlyIncome} /></p>
-              <p className="text-[10px] sm:text-xs text-emerald-600 font-medium mt-1" style={f}>What's Possible</p>
-              <p className="text-[9px] text-emerald-500 mt-0.5" style={f}>with your idle {fmt(idleTotal)} working</p>
+              <p className="text-sm text-emerald-600 font-medium mt-1" style={f}>What's Possible</p>
+              <p className="text-xs text-emerald-500 mt-0.5" style={f}>with your idle {fmt(idleTotal)} working</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* LONG-FORM SALES LETTER */}
-      <div className="max-w-2xl mx-auto px-5 py-12 space-y-12">
+      <div className="max-w-2xl mx-auto px-5 py-12 space-y-16">
 
         {/* ================================================================
             Q3: IS THIS EXACTLY THE SOLUTION I NEED?
@@ -159,7 +159,7 @@ const ResultsPage = () => {
 
         {/* Reveal */}
         <section className="highlight-box">
-          {revealText.split("\n\n").map((para, i) => <p key={i} className="text-emerald-800 leading-relaxed mb-2 text-[15px]" style={f}>{para}</p>)}
+          {revealText.split("\n\n").map((para, i) => <p key={i} className="text-emerald-800 leading-relaxed mb-2 text-base" style={f}>{para}</p>)}
         </section>
 
         {/* Even If */}
@@ -169,7 +169,7 @@ const ResultsPage = () => {
             {evenIfBullets.map((bullet, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className="bullet-x">✗</span>
-                <p className="text-stone-700 text-[15px] leading-relaxed" style={f}>{bullet}</p>
+                <p className="text-stone-700 text-base leading-relaxed" style={f}>{bullet}</p>
               </div>
             ))}
           </div>
@@ -240,7 +240,7 @@ const ResultsPage = () => {
             ================================================================ */}
         <section>
           <p className="section-label text-center">The Method</p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 mb-2 text-center">The CPF Retirement Maximiser™</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-3 text-center">The CPF Retirement Maximiser™</h2>
           <p className="text-stone-500 text-sm mb-6 text-center max-w-lg mx-auto" style={f}>A 3-step restructure for Singaporeans aged 50-64 who want their money working harder</p>
 
           {/* Why different callout */}
@@ -358,10 +358,10 @@ const ResultsPage = () => {
             FUTURE PACING — Dynamic by retirement goal
             ================================================================ */}
         <section className="section-warm rounded-2xl p-6 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-stone-900 mb-5 text-center">{firstName}, Picture This...</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 mb-5 text-center">{firstName}, Picture This...</h2>
           <div className="max-w-lg mx-auto space-y-4">
             {futurePacing.map((line, i) => (
-              <p key={i} className={`text-[15px] leading-[1.85] ${i === 0 || i === futurePacing.length - 1 ? "text-stone-900 font-bold" : "text-stone-600"}`} style={f}>{line}</p>
+              <p key={i} className={`text-base leading-[1.85] ${i === 0 || i === futurePacing.length - 1 ? "text-stone-900 font-bold" : "text-stone-600"}`} style={f}>{line}</p>
             ))}
           </div>
         </section>
